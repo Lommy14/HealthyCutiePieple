@@ -125,31 +125,29 @@
     .news-title{font-weight:800;color:#0b2b48;font-size:16px;margin-bottom:6px}
     .meta{font-size:13px;color:var(--muted)}
 
-    /* แสดงกลุ่มเป้าหมายเป็น checkbox แบบภาพที่ให้มา */
-    .targets-checkboxes{
+    /* ---- ปรับสไตล์ให้กลุ่มเป้าหมายในรายการข่าวเป็น checkboxes เล็ก ๆ ตามภาพ ---- */
+    .targets-inline {
       display:flex;
       gap:12px;
-      flex-wrap:wrap;
-      margin-top:8px;
       align-items:center;
+      margin-top:8px;
+      flex-wrap:wrap;
     }
-    .targets-checkboxes label{
+    .targets-inline label{
       display:flex;
       align-items:center;
-      gap:6px;
-      font-size:13px;
+      gap:8px;
+      font-size:14px;
       color:#203845;
-      background:#f7fbff;
-      padding:6px 8px;
-      border-radius:8px;
-      border:1px solid #e9f4ff;
     }
-    .targets-checkboxes input[type="checkbox"]{
+    .targets-inline input[type="checkbox"]{
       width:16px;
       height:16px;
-      accent-color: #2563eb;
+      accent-color:#2563eb;
       cursor:default;
+      margin:0;
     }
+    /* ---- จบกลุ่มเป้าหมาย ---- */
 
     .targets .tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#f1fbff;color:#0b4db1;margin-right:6px;font-weight:700;font-size:12px}
 
@@ -211,7 +209,6 @@
           <button id="clearBtn" class="btn btn-ghost">ล้างแบบฟอร์ม</button>
         </div>
 
-        <!-- Note removed per request -->
         <div class="note-removed">
           <p class="muted">หมายเหตุ: ข่าวที่บันทึกจะเก็บไว้ในเบราว์เซอร์เครื่องนี้ (LocalStorage) หากเปิดจากเครื่องอื่น จะไม่เห็นข่าวชุดนี้</p>
         </div>
@@ -423,20 +420,20 @@
         top.appendChild(left);
         top.appendChild(right);
 
-        // --- Targets as checkboxes (read-only) ---
+        // --- Targets displayed as small checkboxes inline (read-only) ---
         const targetsLine = document.createElement('div');
-        targetsLine.className = 'targets-checkboxes';
-        // ensure fixed order as TARGET_OPTIONS
-        TARGET_OPTIONS.forEach(opt => {
+        targetsLine.className = 'targets-inline';
+        // show checkboxes in fixed order
+        ['นักเรียน','ครู','ผู้ปกครอง','บุคลากร','บุคคลทั่วไป'].forEach(opt => {
           const lab = document.createElement('label');
           const cb = document.createElement('input');
           cb.type = 'checkbox';
           cb.disabled = true;
           if (Array.isArray(it.targets) && it.targets.includes(opt)) cb.checked = true;
           lab.appendChild(cb);
-          const span = document.createElement('span');
-          span.textContent = opt;
-          lab.appendChild(span);
+          const txt = document.createElement('span');
+          txt.textContent = opt;
+          lab.appendChild(txt);
           targetsLine.appendChild(lab);
         });
 
@@ -460,7 +457,7 @@
         actions.appendChild(delBtn);
 
         card.appendChild(top);
-        card.appendChild(targetsLine); // <-- checkbox-style targets here
+        card.appendChild(targetsLine); // <-- here
         card.appendChild(body);
         card.appendChild(actions);
 
