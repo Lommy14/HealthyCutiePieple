@@ -12,7 +12,6 @@
       --accent:#2563eb;
       --muted:#6b7280;
       --line:#e6eefc;
-      --radius:14px;
     }
     *{box-sizing:border-box;font-family:"Sarabun", system-ui, -apple-system, "Segoe UI", sans-serif}
     body{
@@ -125,31 +124,32 @@
     .news-title{font-weight:800;color:#0b2b48;font-size:16px;margin-bottom:6px}
     .meta{font-size:13px;color:var(--muted)}
 
-    /* ---- ปรับสไตล์ให้กลุ่มเป้าหมายในรายการข่าวเป็น checkboxes เล็ก ๆ ตามภาพ ---- */
+    /* === กลุ่มเป้าหมายในรายการข่าว แบบภาพ (เล็ก กระชับ) === */
     .targets-inline {
       display:flex;
-      gap:12px;
+      gap:14px;
       align-items:center;
       margin-top:8px;
       flex-wrap:wrap;
+      font-size:13px;
+      color:#203845;
     }
     .targets-inline label{
       display:flex;
       align-items:center;
-      gap:8px;
-      font-size:14px;
-      color:#203845;
+      gap:6px;
+      padding:2px 0;
     }
+    /* เล็กกว่าปกติและดูเหมือนภาพต้นทาง */
     .targets-inline input[type="checkbox"]{
-      width:16px;
-      height:16px;
+      width:14px;
+      height:14px;
+      margin:0;
       accent-color:#2563eb;
       cursor:default;
-      margin:0;
     }
-    /* ---- จบกลุ่มเป้าหมาย ---- */
-
-    .targets .tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#f1fbff;color:#0b4db1;margin-right:6px;font-weight:700;font-size:12px}
+    .targets-inline span{line-height:1; font-size:13px}
+    /* === จบกลุ่มเป้าหมาย === */
 
     .news-body{margin-top:8px;color:#203845;white-space:pre-line;font-size:14px}
 
@@ -157,8 +157,6 @@
     .action-btn{padding:6px 10px;border-radius:8px;background:#f3f7ff;border:1px solid #e6f0ff;cursor:pointer;font-weight:700}
 
     .empty{text-align:center;color:var(--muted);padding:24px;border-radius:8px;border:1px dashed #e6eefc}
-
-    .note-removed{display:none} /* we removed the LocalStorage note as requested */
   </style>
 </head>
 <body>
@@ -208,10 +206,6 @@
           <button id="saveBtn" class="btn btn-primary">บันทึกข่าว</button>
           <button id="clearBtn" class="btn btn-ghost">ล้างแบบฟอร์ม</button>
         </div>
-
-        <div class="note-removed">
-          <p class="muted">หมายเหตุ: ข่าวที่บันทึกจะเก็บไว้ในเบราว์เซอร์เครื่องนี้ (LocalStorage) หากเปิดจากเครื่องอื่น จะไม่เห็นข่าวชุดนี้</p>
-        </div>
       </div>
 
       <!-- right: list + filters -->
@@ -231,7 +225,7 @@
           </select>
 
           <div style="display:flex;gap:8px;align-items:center">
-            <label style="font-weight:700;margin-right:6px">กลุ่ม:</label>
+            <label style="font-weight:700;margin-right:6px">กลุ่มเป้าหมาย:</label>
             <label><input type="checkbox" class="filter-target" value="นักเรียน">นักเรียน</label>
             <label><input type="checkbox" class="filter-target" value="ครู">ครู</label>
             <label><input type="checkbox" class="filter-target" value="ผู้ปกครอง">ผู้ปกครอง</label>
@@ -239,8 +233,11 @@
             <label><input type="checkbox" class="filter-target" value="บุคคลทั่วไป">บุคคลทั่วไป</label>
           </div>
 
-          <input id="fromDate" class="date-input" type="date" title="วันที่จาก">
-          <input id="toDate" class="date-input" type="date" title="ถึง">
+          <div style="display:flex;gap:8px;align-items:center">
+            <label style="font-weight:700;margin-right:6px">วันที่ประกาศ:</label>
+            <input id="fromDate" class="date-input" type="date" title="วันที่จาก">
+            <input id="toDate" class="date-input" type="date" title="ถึง">
+          </div>
 
           <label style="margin-left:auto; display:flex;align-items:center;gap:8px">
             <input id="pinnedOnly" type="checkbox"> แสดงเฉพาะปักหมุด
@@ -249,18 +246,14 @@
           <button id="clearAllBtn" class="btn btn-ghost small">ลบข่าวทั้งหมด</button>
         </div>
 
-        <div id="newsList" class="news-list">
-          <!-- news items injected here -->
-        </div>
+        <div id="newsList" class="news-list"></div>
       </div>
     </div>
   </div>
 
   <script>
-    // Key for localStorage
     const STORAGE_KEY = 'school_news_v2';
 
-    // DOM Elements
     const titleEl = document.getElementById('title');
     const publisherEl = document.getElementById('publisher');
     const dateEl = document.getElementById('date');
@@ -272,19 +265,16 @@
 
     const searchEl = document.getElementById('search');
     const filterCategoryEl = document.getElementById('filterCategory');
-    const filterTargetCheckboxes = document.querySelectorAll('.filter-target');
     const fromDateEl = document.getElementById('fromDate');
     const toDateEl = document.getElementById('toDate');
     const pinnedOnlyEl = document.getElementById('pinnedOnly');
     const newsListDiv = document.getElementById('newsList');
     const clearAllBtn = document.getElementById('clearAllBtn');
 
-    // List of standard target options (use for display order)
     const TARGET_OPTIONS = ['นักเรียน','ครู','ผู้ปกครอง','บุคลากร','บุคคลทั่วไป'];
 
     let items = [];
 
-    // Initialize default date to today
     function setToday() {
       const t = new Date();
       const yyyy = t.getFullYear();
@@ -293,22 +283,15 @@
       dateEl.value = `${yyyy}-${mm}-${dd}`;
     }
 
-    // Load from localStorage
     function load() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         items = raw ? JSON.parse(raw) : [];
-      } catch (e) {
-        items = [];
-      }
+      } catch (e) { items = []; }
     }
 
-    // Save to localStorage
-    function save() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    }
+    function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); }
 
-    // Clear form
     function clearForm() {
       titleEl.value = '';
       publisherEl.value = '';
@@ -318,21 +301,18 @@
       setToday();
     }
 
-    // Helper: get selected targets from form
     function getFormTargets() {
       const res = [];
       targetsEl.querySelectorAll('input[type="checkbox"]').forEach(cb => { if(cb.checked) res.push(cb.value); });
       return res;
     }
 
-    // Helper: get selected filter targets (array)
     function getFilterTargets() {
       const res = [];
       document.querySelectorAll('.filter-target').forEach(cb => { if(cb.checked) res.push(cb.value); });
       return res;
     }
 
-    // Date in range helper (strings YYYY-MM-DD)
     function dateInRange(d, from, to) {
       if (!d) return false;
       if (from && d < from) return false;
@@ -340,7 +320,6 @@
       return true;
     }
 
-    // Render items with filters
     function render() {
       newsListDiv.innerHTML = '';
       const keyword = (searchEl.value || '').trim().toLowerCase();
@@ -350,7 +329,6 @@
       const to = toDateEl.value;
       const pinnedOnly = pinnedOnlyEl.checked;
 
-      // sort: pinned first, then newest createdAt
       const sorted = items.slice().sort((a,b) => {
         if (a.pinned && !b.pinned) return -1;
         if (!a.pinned && b.pinned) return 1;
@@ -359,21 +337,15 @@
 
       const filtered = sorted.filter(it => {
         if (pinnedOnly && !it.pinned) return false;
-
         const text = ((it.title||'') + ' ' + (it.content||'') + ' ' + (it.publisher||'') + ' ' + (it.targets||[]).join(' ')).toLowerCase();
         if (keyword && !text.includes(keyword)) return false;
-
         if (catFilter && it.category !== catFilter) return false;
-
-        // targets: OR logic — if user selected some filter targets, must match at least one
         if (selectedTargets.length > 0) {
           if (!Array.isArray(it.targets) || it.targets.length === 0) return false;
           const any = selectedTargets.some(t => it.targets.includes(t));
           if (!any) return false;
         }
-
         if ((from || to) && !dateInRange(it.date || '', from, to)) return false;
-
         return true;
       });
 
@@ -399,7 +371,7 @@
 
         const meta = document.createElement('div');
         meta.className = 'meta';
-        meta.innerHTML = `<strong>${it.publisher? escapeHtml(it.publisher) : '—'}</strong> &nbsp; • &nbsp; ${it.date || '-'}`;
+        meta.innerHTML = `<strong>${escapeHtml(it.publisher || '—')}</strong> &nbsp; • &nbsp; ${it.date || '-'}`;
 
         left.appendChild(title);
         left.appendChild(meta);
@@ -420,20 +392,19 @@
         top.appendChild(left);
         top.appendChild(right);
 
-        // --- Targets displayed as small checkboxes inline (read-only) ---
+        // targets shown as small checkboxes inline (disabled)
         const targetsLine = document.createElement('div');
         targetsLine.className = 'targets-inline';
-        // show checkboxes in fixed order
-        ['นักเรียน','ครู','ผู้ปกครอง','บุคลากร','บุคคลทั่วไป'].forEach(opt => {
+        TARGET_OPTIONS.forEach(opt => {
           const lab = document.createElement('label');
           const cb = document.createElement('input');
           cb.type = 'checkbox';
           cb.disabled = true;
           if (Array.isArray(it.targets) && it.targets.includes(opt)) cb.checked = true;
           lab.appendChild(cb);
-          const txt = document.createElement('span');
-          txt.textContent = opt;
-          lab.appendChild(txt);
+          const span = document.createElement('span');
+          span.textContent = opt;
+          lab.appendChild(span);
           targetsLine.appendChild(lab);
         });
 
@@ -457,7 +428,7 @@
         actions.appendChild(delBtn);
 
         card.appendChild(top);
-        card.appendChild(targetsLine); // <-- here
+        card.appendChild(targetsLine);
         card.appendChild(body);
         card.appendChild(actions);
 
@@ -465,13 +436,11 @@
       });
     }
 
-    // escape for display in meta
     function escapeHtml(s){
       if(!s) return '';
       return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
 
-    // Save new item
     function addItem(){
       const title = titleEl.value.trim();
       const publisher = publisherEl.value.trim();
@@ -479,49 +448,27 @@
       const category = categoryEl.value;
       const content = contentEl.value.trim();
       const targets = getFormTargets();
-
-      if(!title){
-        alert('กรุณากรอกหัวข้อข่าว');
-        return;
-      }
-
-      const obj = {
-        id: Date.now().toString(),
-        title, publisher, date, category, content, targets,
-        pinned: false,
-        createdAt: Date.now()
-      };
-
+      if(!title){ alert('กรุณากรอกหัวข้อข่าว'); return; }
+      const obj = { id: Date.now().toString(), title, publisher, date, category, content, targets, pinned: false, createdAt: Date.now() };
       items.push(obj);
-      save();
-      render();
-      clearForm();
+      save(); render(); clearForm();
     }
 
     function togglePin(id){
       const idx = items.findIndex(i => i.id === id);
-      if(idx !== -1){
-        items[idx].pinned = !items[idx].pinned;
-        save();
-        render();
-      }
+      if(idx !== -1){ items[idx].pinned = !items[idx].pinned; save(); render(); }
     }
 
     function deleteItem(id){
       if(!confirm('ต้องการลบข่าวนี้หรือไม่?')) return;
-      items = items.filter(i => i.id !== id);
-      save();
-      render();
+      items = items.filter(i => i.id !== id); save(); render();
     }
 
     function clearAll(){
       if(!confirm('ต้องการลบข่าวทั้งหมดหรือไม่?')) return;
-      items = [];
-      save();
-      render();
+      items = []; save(); render();
     }
 
-    // Attach events
     saveBtn.addEventListener('click', addItem);
     clearBtn.addEventListener('click', clearForm);
     clearAllBtn.addEventListener('click', clearAll);
@@ -532,7 +479,6 @@
     pinnedOnlyEl.addEventListener('change', render);
     document.querySelectorAll('.filter-target').forEach(cb => cb.addEventListener('change', render));
 
-    // init
     setToday();
     load();
     render();
