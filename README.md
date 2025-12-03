@@ -1,305 +1,79 @@
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>ระบบประกาศข้อมูลข่าวสารโรงเรียน</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ระบบประกาศข้อมูลข่าวสารโรงเรียน (แชร์/มีสิทธิ์)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; font-family: "Sarabun", system-ui, sans-serif; }
-
-    body {
-      margin: 0;
-      padding: 16px;
-      background: #f3f6ff;
-      display: flex;
-      justify-content: center;
+    :root{
+      --bg:#f7fbff;--card:#ffffff;--primary:#1e3a8a;--accent:#2563eb;--muted:#6b7280;--line:#e6eefc;
     }
-
-    .container {
-      width: 100%;
-      max-width: 1100px;
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 20px 22px 26px;
-      box-shadow: 0 8px 26px rgba(15,23,42,0.12);
-      border: 1px solid #e0e7ff;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 24px;
-      text-align: center;
-      color: #1e3a8a;
-    }
-    .subtitle {
-      text-align: center;
-      font-size: 13px;
-      color: #6b7280;
-      margin-bottom: 14px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
-      gap: 18px;
-    }
-    @media (max-width: 900px) {
-      .grid { grid-template-columns: 1fr; }
-    }
-
-    .card {
-      border-radius: 14px;
-      border: 1px solid #e5e7eb;
-      background: #f9fbff;
-      padding: 14px 16px;
-    }
-
-    h2 {
-      margin: 0 0 6px;
-      font-size: 18px;
-      color: #1f2937;
-    }
-
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: #374151;
-      margin-top: 8px;
-    }
-
-    input[type="text"],
-    input[type="date"],
-    select,
-    textarea {
-      width: 100%;
-      padding: 8px 10px;
-      margin-top: 4px;
-      border-radius: 10px;
-      border: 1px solid #cbd5e1;
-      font-size: 14px;
-      outline: none;
-      background: #ffffff;
-    }
-
-    textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 2px rgba(37,99,235,0.18);
-    }
-
-    .checkbox-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px 12px;
-      margin-top: 4px;
-      font-size: 13px;
-    }
-    .checkbox-row label {
-      margin-top: 0;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .btn-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    button {
-      border-radius: 999px;
-      border: none;
-      padding: 8px 14px;
-      font-size: 14px;
-      cursor: pointer;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .btn-primary {
-      background: linear-gradient(90deg, #2563eb, #22c55e);
-      color: #ffffff;
-    }
-    .btn-ghost {
-      background: #e5e7eb;
-      color: #111827;
-    }
-    .btn-small {
-      padding: 4px 10px;
-      font-size: 12px;
-    }
-
-    .hint {
-      font-size: 12px;
-      color: #6b7280;
-      margin-top: 4px;
-    }
-
-    .filter-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-      margin-bottom: 10px;
-      font-size: 13px;
-    }
-
-    .filter-row input[type="text"],
-    .filter-row select {
-      max-width: 220px;
-    }
-
-    .filter-row .date-filter {
-      max-width: 150px;
-    }
-
-    .filter-row .inline {
-      display:flex;
-      gap:6px;
-      align-items:center;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-    .badge-category { background: #dbeafe; color: #1d4ed8; }
-    .badge-target { background: #dcfce7; color: #15803d; }
-    .badge-pinned { background: #fef3c7; color: #92400e; }
-
-    .news-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 520px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .news-card {
-      border-radius: 12px;
-      padding: 10px 12px;
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-    }
-
-    .news-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      align-items: flex-start;
-    }
-
-    .news-title {
-      font-weight: 700;
-      font-size: 15px;
-      color: #111827;
-      margin-bottom: 2px;
-    }
-
-    .news-meta {
-      font-size: 12px;
-      color: #6b7280;
-      margin-bottom: 4px;
-    }
-
-    .news-body {
-      font-size: 13px;
-      color: #374151;
-      white-space: pre-line;
-      margin-top: 4px;
-    }
-
-    .news-actions {
-      display: flex;
-      gap: 6px;
-      margin-top: 6px;
-      justify-content: flex-end;
-    }
-
-    .empty-state {
-      font-size: 13px;
-      color: #9ca3af;
-      text-align: center;
-      padding: 14px 4px;
-    }
+    *{box-sizing:border-box;font-family:"Sarabun",system-ui,-apple-system,"Segoe UI",sans-serif}
+    body{margin:0;background:var(--bg);padding:18px;display:flex;justify-content:center;color:#10243a}
+    .container{width:100%;max-width:1200px;background:var(--card);border-radius:14px;padding:18px;border:1px solid var(--line);box-shadow:0 10px 30px rgba(16,36,58,0.06)}
+    header{text-align:center;margin-bottom:12px}
+    header h1{margin:0;color:var(--primary);font-size:26px}
+    header p{margin:6px 0 0;color:var(--muted);font-size:13px}
+    .layout{display:grid;grid-template-columns:420px 1fr;gap:16px}
+    @media(max-width:980px){.layout{grid-template-columns:1fr}}
+    .card{background:linear-gradient(180deg,#fbfeff,#f6fbff);border-radius:12px;padding:14px;border:1px solid var(--line)}
+    label{display:block;font-size:13px;font-weight:600;margin-top:10px;color:#1f2937}
+    input[type="text"],input[type="date"],select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #dbe9ff;background:#fff;margin-top:6px}
+    textarea{min-height:100px;resize:vertical}
+    .checkbox-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .checkbox-row label{display:flex;align-items:center;gap:8px;font-weight:500}
+    .btn-row{display:flex;gap:10px;margin-top:12px;align-items:center}
+    .btn{padding:10px 14px;border-radius:999px;border:0;cursor:pointer;font-weight:700}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),#16a34a);color:#fff}
+    .btn-ghost{background:#eef6ff;color:#10243a;border:1px solid #e6f0ff}
+    .muted{color:var(--muted);font-size:13px;margin-top:6px}
+    .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+    .small-input{max-width:220px;padding:8px;border-radius:10px;border:1px solid #dbe9ff;background:#fff}
+    .date-input{max-width:150px;padding:8px;border-radius:10px;border:1px solid #dbe9ff;background:#fff}
+    .news-list{display:flex;flex-direction:column;gap:12px;max-height:560px;overflow:auto;padding-right:6px}
+    .news-item{background:#fff;border-radius:10px;padding:12px;border:1px solid #eef6ff;box-shadow:0 6px 18px rgba(16,36,58,0.03)}
+    .news-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+    .news-title{font-weight:800;color:#0b2b48;font-size:16px;margin-bottom:6px}
+    .meta{font-size:13px;color:var(--muted)}
+    .targets{margin-top:6px}
+    .tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef9ff;color:#0b58a5;margin-right:6px;font-weight:700;font-size:12px}
+    .news-body{margin-top:8px;color:#203845;white-space:pre-line;font-size:14px}
+    .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+    .action-btn{padding:6px 10px;border-radius:8px;background:#f3f7ff;border:1px solid #e6f0ff;cursor:pointer;font-weight:700}
+    .empty{text-align:center;color:var(--muted);padding:24px;border-radius:8px;border:1px dashed #e6eefc}
+    .user-row{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-bottom:8px}
+    .badge-admin{background:#fff7ed;color:#92400e;border-radius:999px;padding:6px 10px;font-weight:700}
+    .hidden{display:none}
+    .info{font-size:13px;color:var(--muted);margin-top:8px}
   </style>
 </head>
 <body>
-<div class="container">
-  <h1>ระบบประกาศข้อมูลข่าวสารโรงเรียน</h1>
-  <p class="subtitle">บันทึกข่าวใหม่และแสดงข่าวทั้งหมดในที่เดียว (ข้อมูลเก็บไว้ที่เครื่องด้วย LocalStorage)</p>
+  <div class="container">
+    <header>
+      <h1>ระบบประกาศข้อมูลข่าวสารโรงเรียน</h1>
+      <p>ข่าวแชร์ร่วมกัน (Firestore) — ลงชื่อเข้าใช้เพื่อโพสต์/แก้ไข/ลบ (เฉพาะ admin)</p>
+    </header>
 
-  <div class="grid">
-    <!-- ฟอร์มเพิ่มข่าว -->
-    <div class="card">
-      <h2>บันทึกข่าวสารใหม่</h2>
-
-      <label for="newsTitle">หัวข้อข่าว</label>
-      <input type="text" id="newsTitle" placeholder="เช่น แจ้งกำหนดการประชุมผู้ปกครอง">
-
-      <label for="newsDate">วันที่ประกาศ</label>
-      <input type="date" id="newsDate">
-
-      <label for="newsCategory">หมวดหมู่ข่าว</label>
-      <select id="newsCategory">
-        <option value="ทั่วไป">ทั่วไป</option>
-        <option value="การเรียนการสอน">การเรียนการสอน</option>
-        <option value="กิจกรรม">กิจกรรม</option>
-        <option value="ประชุม/อบรม">ประชุม/อบรม</option>
-        <option value="งานวิชาการ">งานวิชาการ</option>
-        <option value="อื่น ๆ">อื่น ๆ</option>
-      </select>
-
-      <label>กลุ่มเป้าหมาย</label>
-      <div class="checkbox-row" id="targetGroup">
-        <label><input type="checkbox" value="นักเรียน"> นักเรียน</label>
-        <label><input type="checkbox" value="ครู"> ครู</label>
-        <label><input type="checkbox" value="ผู้ปกครอง"> ผู้ปกครอง</label>
-        <label><input type="checkbox" value="บุคลากร"> บุคลากร</label>
-        <label><input type="checkbox" value="บุคคลทั่วไป"> บุคคลทั่วไป</label>
-      </div>
-      <div class="hint">เลือกได้มากกว่าหนึ่งข้อ</div>
-
-      <label for="newsContent">รายละเอียดข่าว</label>
-      <textarea id="newsContent" placeholder="รายละเอียดโดยย่อ เช่น วันเวลา สถานที่ เงื่อนไข..."></textarea>
-
-      <div class="btn-row">
-        <button class="btn-primary" id="btnSave">บันทึกข่าว</button>
-        <button class="btn-ghost" id="btnClearForm" type="button">ล้างแบบฟอร์ม</button>
-      </div>
-
-      <p class="hint">
-        หมายเหตุ: ข่าวที่บันทึกจะเก็บไว้ในเบราว์เซอร์เครื่องนี้ (LocalStorage)<br>
-        หากเปิดจากเครื่องอื่น จะไม่เห็นข่าวชุดนี้
-      </p>
+    <div class="user-row" id="authRow">
+      <!-- populated by JS: sign in/out and user info -->
     </div>
 
-    <!-- รายการข่าว -->
-    <div class="card">
-      <h2>รายการข่าวสาร</h2>
+    <div class="layout">
+      <!-- left: form -->
+      <div class="card" id="formCard">
+        <h2 id="formTitle">บันทึกข่าวสารใหม่</h2>
 
-      <div class="filter-row">
-        <span>ค้นหา:</span>
-        <input type="text" id="searchInput" placeholder="พิมพ์คำค้นหัวข้อ / รายละเอียด">
+        <label>หัวข้อข่าว</label>
+        <input id="title" type="text" placeholder="เช่น แจ้งกำหนดการประชุมผู้ปกครอง">
 
-        <label style="margin:0 0 0 6px;">หมวดหมู่:</label>
-        <select id="filterCategory">
-          <option value="">ทุกหมวดหมู่</option>
+        <label>ชื่อผู้ลงประกาศ</label>
+        <input id="publisher" type="text" placeholder="ชื่อ-นามสกุล">
+
+        <label>วันที่ประกาศ</label>
+        <input id="date" type="date">
+
+        <label>หมวดหมู่ข่าว</label>
+        <select id="category">
           <option value="ทั่วไป">ทั่วไป</option>
           <option value="การเรียนการสอน">การเรียนการสอน</option>
           <option value="กิจกรรม">กิจกรรม</option>
@@ -308,295 +82,469 @@
           <option value="อื่น ๆ">อื่น ๆ</option>
         </select>
 
-        <label style="margin:0 0 0 6px;">กลุ่มเป้าหมาย:</label>
-        <select id="filterTarget">
-          <option value="">ทุกกลุ่ม</option>
-          <option value="นักเรียน">นักเรียน</option>
-          <option value="ครู">ครู</option>
-          <option value="ผู้ปกครอง">ผู้ปกครอง</option>
-          <option value="บุคลากร">บุคลากร</option>
-          <option value="บุคคลทั่วไป">บุคคลทั่วไป</option>
-        </select>
-
-        <label style="margin:0 0 0 6px;">วันที่จาก</label>
-        <input class="date-filter" type="date" id="filterFrom">
-
-        <label style="margin:0 0 0 6px;">ถึง</label>
-        <input class="date-filter" type="date" id="filterTo">
-
-        <div class="inline" style="margin-left:auto;">
-          <label style="font-weight:600;display:flex;align-items:center;gap:6px;">
-            <input type="checkbox" id="filterPinnedOnly"> แสดงเฉพาะที่ปักหมุด
-          </label>
+        <label>กลุ่มเป้าหมาย</label>
+        <div id="targets" class="checkbox-row">
+          <label><input type="checkbox" value="นักเรียน"> นักเรียน</label>
+          <label><input type="checkbox" value="ครู"> ครู</label>
+          <label><input type="checkbox" value="ผู้ปกครอง"> ผู้ปกครอง</label>
+          <label><input type="checkbox" value="บุคลากร"> บุคลากร</label>
+          <label><input type="checkbox" value="บุคคลทั่วไป"> บุคคลทั่วไป</label>
         </div>
 
-        <button class="btn-ghost btn-small" id="btnClearAll">ลบข่าวทั้งหมด</button>
+        <label>รายละเอียดข่าว</label>
+        <textarea id="content" placeholder="รายละเอียด เช่น วัน เวลา สถานที่ เงื่อนไข"></textarea>
+
+        <div class="btn-row" id="formButtons">
+          <button id="saveBtn" class="btn btn-primary">บันทึกข่าว</button>
+          <button id="cancelEditBtn" class="btn btn-ghost hidden">ยกเลิกการแก้ไข</button>
+          <button id="clearBtn" class="btn btn-ghost">ล้างแบบฟอร์ม</button>
+        </div>
+
+        <div class="info">
+          หากต้องการแชร์ข่าวให้คนอื่นเห็นจริง ๆ ให้ใช้ Firestore (ตั้งค่าใน script) — ตรวจสอบค่า <code>firebaseConfig</code> และ <code>ADMIN_EMAILS</code> ก่อนใช้งาน
+        </div>
       </div>
 
-      <div id="newsList" class="news-list"></div>
+      <!-- right: list -->
+      <div class="card">
+        <h2>รายการข่าวสาร</h2>
+
+        <div class="filters">
+          <input id="search" class="small-input" type="text" placeholder="ค้นหา หัวข้อหรือเนื้อหา" style="flex:1">
+          <select id="filterCategory" class="small-input">
+            <option value="">ทุกหมวดหมู่</option>
+            <option>ทั่วไป</option>
+            <option>การเรียนการสอน</option>
+            <option>กิจกรรม</option>
+            <option>ประชุม/อบรม</option>
+            <option>งานวิชาการ</option>
+            <option>อื่น ๆ</option>
+          </select>
+
+          <div style="display:flex;gap:6px;align-items:center">
+            <label style="font-weight:700;margin-right:6px">กลุ่ม:</label>
+            <label><input type="checkbox" class="filter-target" value="นักเรียน">นักเรียน</label>
+            <label><input type="checkbox" class="filter-target" value="ครู">ครู</label>
+            <label><input type="checkbox" class="filter-target" value="ผู้ปกครอง">ผู้ปกครอง</label>
+            <label><input type="checkbox" class="filter-target" value="บุคลากร">บุคลากร</label>
+            <label><input type="checkbox" class="filter-target" value="บุคคลทั่วไป">บุคคลทั่วไป</label>
+          </div>
+
+          <input id="fromDate" class="date-input" type="date" title="วันที่จาก">
+          <input id="toDate" class="date-input" type="date" title="ถึง">
+
+          <label style="margin-left:auto;display:flex;align-items:center;gap:8px">
+            <input id="pinnedOnly" type="checkbox"> แสดงเฉพาะปักหมุด
+          </label>
+
+          <button id="clearAllBtn" class="btn btn-ghost">ลบข่าวทั้งหมด</button>
+        </div>
+
+        <div id="newsList" class="news-list"></div>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-  // คีย์สำหรับ localStorage
-  const STORAGE_KEY = "schoolNewsList";
+  <!-- Firebase compat SDK (ง่ายต่อการนำโค้ดเดิมมาปรับ) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
-  const newsTitle = document.getElementById("newsTitle");
-  const newsDate = document.getElementById("newsDate");
-  const newsCategory = document.getElementById("newsCategory");
-  const newsContent = document.getElementById("newsContent");
-  const targetGroup = document.getElementById("targetGroup");
-  const btnSave = document.getElementById("btnSave");
-  const btnClearForm = document.getElementById("btnClearForm");
-  const btnClearAll = document.getElementById("btnClearAll");
-  const newsListDiv = document.getElementById("newsList");
-  const searchInput = document.getElementById("searchInput");
-  const filterCategory = document.getElementById("filterCategory");
-  const filterTarget = document.getElementById("filterTarget");
-  const filterFrom = document.getElementById("filterFrom");
-  const filterTo = document.getElementById("filterTo");
-  const filterPinnedOnly = document.getElementById("filterPinnedOnly");
-
-  let newsItems = [];
-
-  // ตั้งค่าวันที่วันนี้เป็นค่าเริ่มต้น
-  function setTodayDefault() {
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    newsDate.value = `${yyyy}-${mm}-${dd}`;
-  }
-
-  // โหลดข่าวจาก localStorage
-  function loadNews() {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        newsItems = JSON.parse(saved);
-      } catch (e) {
-        newsItems = [];
-      }
-    }
-  }
-
-  // บันทึกลง localStorage
-  function saveNews() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newsItems));
-  }
-
-  // ล้างฟอร์ม
-  function clearForm() {
-    newsTitle.value = "";
-    newsContent.value = "";
-    newsCategory.value = "ทั่วไป";
-    setTodayDefault();
-    const checkboxes = targetGroup.querySelectorAll("input[type='checkbox']");
-    checkboxes.forEach(cb => cb.checked = false);
-  }
-
-  // ฟังก์ชันช่วยเปรียบเทียบวันที่ (YYYY-MM-DD)
-  function dateInRange(itemDate, from, to) {
-    if (!itemDate) return false;
-    // itemDate, from, to are strings 'YYYY-MM-DD' or empty
-    if (from && itemDate < from) return false;
-    if (to && itemDate > to) return false;
-    return true;
-  }
-
-  // เรนเดอร์รายการข่าว (ใช้ตัวกรองทั้งหมดที่กำหนด)
-  function renderNews() {
-    newsListDiv.innerHTML = "";
-
-    const keyword = searchInput.value.trim().toLowerCase();
-    const catFilter = filterCategory.value;
-    const targetFilter = filterTarget.value;
-    const fromDate = filterFrom.value;
-    const toDate = filterTo.value;
-    const pinnedOnly = filterPinnedOnly.checked;
-
-    let items = [...newsItems];
-
-    // ปักหมุดขึ้นก่อน + เรียงตาม createdAt (ใหม่สุดก่อน)
-    items.sort((a, b) => {
-      if (a.pinned && !b.pinned) return -1;
-      if (!a.pinned && b.pinned) return 1;
-      return (b.createdAt || 0) - (a.createdAt || 0);
-    });
-
-    // กรองตามเงื่อนไขทั้งหมด
-    items = items.filter(item => {
-      // 1) เงื่อนไข pinnedOnly
-      if (pinnedOnly && !item.pinned) return false;
-
-      // 2) เงื่อนไข keyword
-      const text = (item.title + " " + item.content + " " + (item.targets || []).join(" ")).toLowerCase();
-      if (keyword && !text.includes(keyword)) return false;
-
-      // 3) เงื่อนไขหมวดหมู่
-      if (catFilter && item.category !== catFilter) return false;
-
-      // 4) เงื่อนไข target (ถ้ามีกำหนด)
-      if (targetFilter) {
-        if (!item.targets || !Array.isArray(item.targets)) return false;
-        if (!item.targets.includes(targetFilter)) return false;
-      }
-
-      // 5) เงื่อนไขช่วงวันที่
-      if ((fromDate || toDate) && !dateInRange(item.date || "", fromDate, toDate)) return false;
-
-      return true;
-    });
-
-    if (items.length === 0) {
-      const empty = document.createElement("div");
-      empty.className = "empty-state";
-      empty.textContent = "ยังไม่มีข่าว หรือไม่พบข่าวตามเงื่อนไข";
-      newsListDiv.appendChild(empty);
-      return;
-    }
-
-    items.forEach(item => {
-      const card = document.createElement("div");
-      card.className = "news-card";
-
-      const header = document.createElement("div");
-      header.className = "news-header";
-
-      const left = document.createElement("div");
-
-      const title = document.createElement("div");
-      title.className = "news-title";
-      title.textContent = item.title;
-
-      const meta = document.createElement("div");
-      meta.className = "news-meta";
-
-      const dateStr = item.date || "-";
-      meta.innerHTML =
-        `<span class="badge badge-category">${item.category}</span> ` +
-        (item.pinned ? `<span class="badge badge-pinned">ปักหมุด</span> ` : "") +
-        `<span>ประกาศเมื่อ: ${dateStr}</span>`;
-
-      const targetBadge = document.createElement("div");
-      targetBadge.className = "news-meta";
-
-      if (item.targets && item.targets.length > 0) {
-        targetBadge.innerHTML =
-          `<span class="badge badge-target">กลุ่มเป้าหมาย: ${item.targets.join(", ")}</span>`;
-      } else {
-        targetBadge.innerHTML =
-          `<span class="badge badge-target">กลุ่มเป้าหมาย: ไม่ระบุ</span>`;
-      }
-
-      left.appendChild(title);
-      left.appendChild(meta);
-      left.appendChild(targetBadge);
-
-      header.appendChild(left);
-
-      const body = document.createElement("div");
-      body.className = "news-body";
-      body.textContent = item.content || "";
-
-      const actions = document.createElement("div");
-      actions.className = "news-actions";
-
-      const btnPin = document.createElement("button");
-      btnPin.className = "btn-ghost btn-small";
-      btnPin.textContent = item.pinned ? "ยกเลิกปักหมุด" : "ปักหมุด";
-      btnPin.addEventListener("click", () => togglePin(item.id));
-
-      const btnDelete = document.createElement("button");
-      btnDelete.className = "btn-ghost btn-small";
-      btnDelete.textContent = "ลบ";
-      btnDelete.addEventListener("click", () => deleteNews(item.id));
-
-      actions.appendChild(btnPin);
-      actions.appendChild(btnDelete);
-
-      card.appendChild(header);
-      card.appendChild(body);
-      card.appendChild(actions);
-
-      newsListDiv.appendChild(card);
-    });
-  }
-
-  // เพิ่มข่าวใหม่
-  function addNews() {
-    const title = newsTitle.value.trim();
-    const date = newsDate.value;
-    const category = newsCategory.value;
-    const content = newsContent.value.trim();
-
-    if (!title) {
-      alert("กรุณากรอกหัวข้อข่าว");
-      return;
-    }
-
-    const checkboxes = targetGroup.querySelectorAll("input[type='checkbox']");
-    const targets = [];
-    checkboxes.forEach(cb => {
-      if (cb.checked) targets.push(cb.value);
-    });
-
-    const item = {
-      id: Date.now(),
-      title,
-      date,
-      category,
-      content,
-      targets,
-      pinned: false,
-      createdAt: Date.now()
+  <script>
+    /************************************************************************
+     *  CONFIGURATION: แก้ค่าส่วนนี้ให้เป็นค่าจาก Firebase Console ของคุณ
+     *  และแก้ ADMIN_EMAILS ให้เป็นรายชื่ออีเมลของแอดมินของโรงเรียน
+     ************************************************************************/
+    const firebaseConfig = {
+      /* TODO: REPLACE WITH YOUR CONFIG FROM FIREBASE */
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MSG_SENDER_ID",
+      appId: "YOUR_APP_ID"
     };
 
-    newsItems.push(item);
-    saveNews();
-    renderNews();
-    clearForm();
-  }
+    // รายชื่อผู้ที่มีสิทธิ์โพสต์/แก้ไข/ลบ (ตัวอย่าง)
+    const ADMIN_EMAILS = [
+      /* ใส่อีเมลของครู/แอดมิน เช่น */
+      "admin1@example.com",
+      "admin2@example.com"
+    ];
 
-  function togglePin(id) {
-    const index = newsItems.findIndex(i => i.id === id);
-    if (index !== -1) {
-      newsItems[index].pinned = !newsItems[index].pinned;
-      saveNews();
-      renderNews();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // DOM
+    const authRow = document.getElementById('authRow');
+    const titleEl = document.getElementById('title');
+    const publisherEl = document.getElementById('publisher');
+    const dateEl = document.getElementById('date');
+    const categoryEl = document.getElementById('category');
+    const contentEl = document.getElementById('content');
+    const targetsEl = document.getElementById('targets');
+    const saveBtn = document.getElementById('saveBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const formTitle = document.getElementById('formTitle');
+
+    const searchEl = document.getElementById('search');
+    const filterCategoryEl = document.getElementById('filterCategory');
+    const filterTargetCheckboxes = document.querySelectorAll('.filter-target');
+    const fromDateEl = document.getElementById('fromDate');
+    const toDateEl = document.getElementById('toDate');
+    const pinnedOnlyEl = document.getElementById('pinnedOnly');
+    const newsListDiv = document.getElementById('newsList');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+
+    let currentUser = null;
+    let isAdmin = false;
+    let editId = null; // id of doc being edited
+
+    // helper: set today's date
+    function setToday(){
+      const t = new Date();
+      const yyyy = t.getFullYear();
+      const mm = String(t.getMonth()+1).padStart(2,'0');
+      const dd = String(t.getDate()).padStart(2,'0');
+      dateEl.value = `${yyyy}-${mm}-${dd}`;
     }
-  }
 
-  function deleteNews(id) {
-    if (!confirm("ต้องการลบข่าวนี้หรือไม่?")) return;
-    newsItems = newsItems.filter(i => i.id !== id);
-    saveNews();
-    renderNews();
-  }
+    // auth UI
+    function renderAuthUI(user) {
+      authRow.innerHTML = '';
+      const wrapper = document.createElement('div');
+      wrapper.style.display = 'flex';
+      wrapper.style.gap = '8px';
+      wrapper.style.alignItems = 'center';
+      wrapper.style.width = '100%';
 
-  function clearAllNews() {
-    if (!confirm("ต้องการลบข่าวทั้งหมดหรือไม่?")) return;
-    newsItems = [];
-    saveNews();
-    renderNews();
-  }
+      const left = document.createElement('div');
+      left.style.flex = '1';
+      if(user){
+        const name = user.displayName || user.email || 'ผู้ใช้';
+        const email = user.email || '';
+        left.innerHTML = `<div style="font-weight:700">${escapeHtml(name)}</div><div style="color:var(--muted);font-size:13px">${escapeHtml(email)}</div>`;
+        if(isAdmin){
+          const b = document.createElement('span');
+          b.className = 'badge-admin';
+          b.textContent = 'ADMIN';
+          left.appendChild(b);
+        }
+      } else {
+        left.innerHTML = `<div style="color:var(--muted);font-size:13px">ไม่พบผู้ใช้งาน — กรุณาเข้าสู่ระบบเพื่อโพสต์/แก้ไข/ลบ</div>`;
+      }
 
-  // Event listeners (ตัวกรองเรียก renderNews ทันทีเมื่อมีการเปลี่ยนค่า)
-  btnSave.addEventListener("click", addNews);
-  btnClearForm.addEventListener("click", clearForm);
-  btnClearAll.addEventListener("click", clearAllNews);
-  searchInput.addEventListener("input", renderNews);
-  filterCategory.addEventListener("change", renderNews);
-  filterTarget.addEventListener("change", renderNews);
-  filterFrom.addEventListener("change", renderNews);
-  filterTo.addEventListener("change", renderNews);
-  filterPinnedOnly.addEventListener("change", renderNews);
+      const right = document.createElement('div');
+      right.style.display = 'flex';
+      right.style.gap = '8px';
+      if(user){
+        const outBtn = document.createElement('button');
+        outBtn.className = 'btn btn-ghost';
+        outBtn.textContent = 'ออกจากระบบ';
+        outBtn.addEventListener('click', () => auth.signOut());
+        right.appendChild(outBtn);
+      } else {
+        const inBtn = document.createElement('button');
+        inBtn.className = 'btn btn-primary';
+        inBtn.textContent = 'ลงชื่อเข้าใช้ด้วย Google';
+        inBtn.addEventListener('click', signInWithGoogle);
+        right.appendChild(inBtn);
+      }
 
-  // เริ่มต้น
-  setTodayDefault();
-  loadNews();
-  renderNews();
-</script>
+      wrapper.appendChild(left);
+      wrapper.appendChild(right);
+      authRow.appendChild(wrapper);
+
+      // show/hide form depending on admin status
+      document.getElementById('formCard').style.display = (user && isAdmin) ? 'block' : (user ? 'block' : 'block');
+      // We allow form to be visible, but actions (save/delete) are checked on client and server.
+      // If you prefer to hide entirely for non-admins, set display to 'none' when not admin.
+    }
+
+    // sign in with popup
+    async function signInWithGoogle(){
+      const provider = new firebase.auth.GoogleAuthProvider();
+      try {
+        await auth.signInWithPopup(provider);
+      } catch (err) {
+        console.error('Sign-in error', err);
+        alert('เกิดข้อผิดพลาดขณะลงชื่อเข้าใช้');
+      }
+    }
+
+    // check admin by email
+    function checkAdmin(user){
+      if(!user || !user.email) return false;
+      return ADMIN_EMAILS.includes(user.email.toLowerCase());
+    }
+
+    // escape html
+    function escapeHtml(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // form helpers
+    function getFormTargets(){
+      const res = [];
+      targetsEl.querySelectorAll('input[type="checkbox"]').forEach(cb => { if(cb.checked) res.push(cb.value); });
+      return res;
+    }
+
+    function setFormTargets(arr){
+      targetsEl.querySelectorAll('input[type="checkbox"]').forEach(cb => { cb.checked = arr.includes(cb.value); });
+    }
+
+    function clearForm(){
+      titleEl.value = '';
+      publisherEl.value = '';
+      contentEl.value = '';
+      categoryEl.value = 'ทั่วไป';
+      setFormTargets([]);
+      setToday();
+      editId = null;
+      formTitle.textContent = 'บันทึกข่าวสารใหม่';
+      cancelEditBtn.classList.add('hidden');
+      saveBtn.textContent = 'บันทึกข่าว';
+    }
+
+    // CRUD with Firestore
+    async function addNewsToFirestore(data){
+      await db.collection('schoolNews').add(data);
+    }
+
+    async function updateNewsInFirestore(id, data){
+      await db.collection('schoolNews').doc(id).update(data);
+    }
+
+    async function deleteNewsFromFirestore(id){
+      await db.collection('schoolNews').doc(id).delete();
+    }
+
+    async function togglePinFirestore(id, pinned){
+      await db.collection('schoolNews').doc(id).update({ pinned: !pinned });
+    }
+
+    // save button handler (create or update)
+    saveBtn.addEventListener('click', async () => {
+      if(!currentUser) { alert('กรุณาลงชื่อเข้าใช้ก่อน'); return; }
+      if(!isAdmin){ alert('เฉพาะผู้ดูแล (admin) เท่านั้นที่สามารถโพสต์หรือแก้ไขได้'); return; }
+
+      const title = titleEl.value.trim();
+      const publisher = publisherEl.value.trim() || (currentUser.displayName || currentUser.email || '');
+      const date = dateEl.value;
+      const category = categoryEl.value;
+      const content = contentEl.value.trim();
+      const targets = getFormTargets();
+
+      if(!title){ alert('กรุณากรอกหัวข้อข่าว'); return; }
+
+      const doc = {
+        title, publisher, date, category, content, targets,
+        pinned: false,
+        updatedAt: Date.now(),
+      };
+
+      try {
+        if(editId){
+          // update
+          await updateNewsInFirestore(editId, doc);
+        } else {
+          // create
+          doc.createdAt = Date.now();
+          await addNewsToFirestore(doc);
+        }
+        clearForm();
+      } catch(err){
+        console.error('Save error', err);
+        alert('เกิดข้อผิดพลาดขณะบันทึก');
+      }
+    });
+
+    // cancel edit
+    cancelEditBtn.addEventListener('click', () => { clearForm(); });
+
+    // clear form
+    clearBtn.addEventListener('click', clearForm);
+
+    // clear all (admin only)
+    clearAllBtn.addEventListener('click', async () => {
+      if(!currentUser || !isAdmin){ alert('เฉพาะผู้ดูแลเท่านั้นที่สามารถลบทั้งหมดได้'); return; }
+      if(!confirm('ต้องการลบข่าวทั้งหมดหรือไม่?')) return;
+      try {
+        const snapshot = await db.collection('schoolNews').get();
+        const batch = db.batch();
+        snapshot.docs.forEach(doc => batch.delete(doc.ref));
+        await batch.commit();
+      } catch(err){
+        console.error('clear all error', err);
+        alert('เกิดข้อผิดพลาดขณะลบทั้งหมด');
+      }
+    });
+
+    // realtime listener & render with filters
+    let cached = [];
+    function startRealtime(){
+      db.collection('schoolNews')
+        .orderBy('pinned','desc')
+        .orderBy('createdAt','desc')
+        .onSnapshot(snap => {
+          cached = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          renderNewsList();
+        }, err => {
+          console.error('snapshot error', err);
+        });
+    }
+
+    function getFilterTargets(){
+      const res = [];
+      document.querySelectorAll('.filter-target').forEach(cb => { if(cb.checked) res.push(cb.value); });
+      return res;
+    }
+
+    function dateInRange(d, from, to){
+      if(!d) return false;
+      if(from && d < from) return false;
+      if(to && d > to) return false;
+      return true;
+    }
+
+    function renderNewsList(){
+      newsListDiv.innerHTML = '';
+      const keyword = (searchEl.value || '').trim().toLowerCase();
+      const catFilter = filterCategoryEl.value;
+      const selectedTargets = getFilterTargets();
+      const from = fromDateEl.value;
+      const to = toDateEl.value;
+      const pinnedOnly = pinnedOnlyEl.checked;
+
+      const items = cached.slice().filter(it => {
+        if(pinnedOnly && !it.pinned) return false;
+        const text = ((it.title||'') + ' ' + (it.content||'') + ' ' + (it.publisher||'') + ' ' + (it.targets||[]).join(' ')).toLowerCase();
+        if(keyword && !text.includes(keyword)) return false;
+        if(catFilter && it.category !== catFilter) return false;
+        if(selectedTargets.length > 0){
+          if(!Array.isArray(it.targets) || it.targets.length === 0) return false;
+          const any = selectedTargets.some(t => it.targets.includes(t));
+          if(!any) return false;
+        }
+        if((from || to) && !dateInRange(it.date || '', from, to)) return false;
+        return true;
+      });
+
+      if(items.length === 0){
+        const e = document.createElement('div'); e.className = 'empty'; e.textContent = 'ยังไม่มีข่าว หรือไม่พบข่าวตามเงื่อนไข'; newsListDiv.appendChild(e); return;
+      }
+
+      items.forEach(it => {
+        const card = document.createElement('div'); card.className = 'news-item';
+
+        const top = document.createElement('div'); top.className = 'news-top';
+        const left = document.createElement('div');
+        const title = document.createElement('div'); title.className = 'news-title'; title.textContent = it.title || '(ไม่มีหัวข้อ)';
+        const meta = document.createElement('div'); meta.className = 'meta'; meta.innerHTML = `<strong>${escapeHtml(it.publisher || '')}</strong> &nbsp; • &nbsp; ${escapeHtml(it.date||'-')}`;
+
+        left.appendChild(title); left.appendChild(meta);
+
+        const right = document.createElement('div');
+        if(it.pinned){
+          const p = document.createElement('div'); p.className='badge-admin'; p.style.background='#fff7ed'; p.style.color='#92400e'; p.textContent = 'ปักหมุด'; right.appendChild(p);
+        }
+
+        top.appendChild(left); top.appendChild(right);
+
+        const targetsLine = document.createElement('div'); targetsLine.className='targets';
+        if(it.targets && it.targets.length){
+          it.targets.forEach(t => {
+            const tag = document.createElement('span'); tag.className='tag'; tag.textContent=t; targetsLine.appendChild(tag);
+          });
+        } else {
+          const tag = document.createElement('span'); tag.className='tag'; tag.textContent='กลุ่มเป้าหมาย: ไม่ระบุ'; targetsLine.appendChild(tag);
+        }
+
+        const body = document.createElement('div'); body.className='news-body'; body.textContent = it.content || '';
+
+        const actions = document.createElement('div'); actions.className='actions';
+        const pinBtn = document.createElement('button'); pinBtn.className='action-btn'; pinBtn.textContent = it.pinned ? 'ยกเลิกปักหมุด' : 'ปักหมุด';
+        pinBtn.addEventListener('click', async () => {
+          if(!currentUser || !isAdmin){ alert('เฉพาะแอดมินเท่านั้น'); return; }
+          try { await togglePinFirestore(it.id, it.pinned); } catch(err){ console.error(err); alert('ผิดพลาดขณะอัปเดตปักหมุด') }
+        });
+        const editBtn = document.createElement('button'); editBtn.className='action-btn'; editBtn.textContent='แก้ไข';
+        editBtn.addEventListener('click', () => {
+          if(!currentUser || !isAdmin){ alert('เฉพาะแอดมินเท่านั้น'); return; }
+          // load doc into form for editing
+          editId = it.id;
+          titleEl.value = it.title || '';
+          publisherEl.value = it.publisher || '';
+          dateEl.value = it.date || '';
+          categoryEl.value = it.category || 'ทั่วไป';
+          contentEl.value = it.content || '';
+          setFormTargets(it.targets || []);
+          formTitle.textContent = 'แก้ไขข่าว';
+          cancelEditBtn.classList.remove('hidden');
+          saveBtn.textContent = 'บันทึกการแก้ไข';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        const delBtn = document.createElement('button'); delBtn.className='action-btn'; delBtn.textContent='ลบ';
+        delBtn.addEventListener('click', async () => {
+          if(!currentUser || !isAdmin){ alert('เฉพาะแอดมินเท่านั้น'); return; }
+          if(!confirm('ต้องการลบข่าวนี้หรือไม่?')) return;
+          try { await deleteNewsFromFirestore(it.id); } catch(err){ console.error(err); alert('เกิดข้อผิดพลาดขณะลบ') }
+        });
+
+        actions.appendChild(pinBtn);
+        actions.appendChild(editBtn);
+        actions.appendChild(delBtn);
+
+        card.appendChild(top);
+        card.appendChild(targetsLine);
+        card.appendChild(body);
+        card.appendChild(actions);
+
+        newsListDiv.appendChild(card);
+      });
+    }
+
+    // listen auth state change
+    auth.onAuthStateChanged(async user => {
+      currentUser = user;
+      isAdmin = checkAdmin(user || {});
+      renderAuthUI(user);
+    });
+
+    // attach realtime after auth initialized
+    startRealtime();
+
+    // wire filters
+    searchEl.addEventListener('input', renderNewsList);
+    filterCategoryEl.addEventListener('change', renderNewsList);
+    fromDateEl.addEventListener('change', renderNewsList);
+    toDateEl.addEventListener('change', renderNewsList);
+    pinnedOnlyEl.addEventListener('change', renderNewsList);
+    document.querySelectorAll('.filter-target').forEach(cb => cb.addEventListener('change', renderNewsList));
+
+    // helper wrapper functions calling firestore operations (with client-side check)
+    async function addNewsToFirestore(data){
+      if(!currentUser || !isAdmin) throw new Error('not authorized');
+      return db.collection('schoolNews').add(data);
+    }
+    async function updateNewsInFirestore(id, data){
+      if(!currentUser || !isAdmin) throw new Error('not authorized');
+      return db.collection('schoolNews').doc(id).update(data);
+    }
+    async function deleteNewsFromFirestore(id){
+      if(!currentUser || !isAdmin) throw new Error('not authorized');
+      return db.collection('schoolNews').doc(id).delete();
+    }
+    async function togglePinFirestore(id, pinned){
+      if(!currentUser || !isAdmin) throw new Error('not authorized');
+      return db.collection('schoolNews').doc(id).update({ pinned: !pinned });
+    }
+
+    // initialize default date
+    setToday();
+  </script>
 </body>
 </html>
